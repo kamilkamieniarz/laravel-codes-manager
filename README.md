@@ -1,56 +1,57 @@
-# System Zarządzania Kodami Numerycznymi
+# Numerical Code Management System
 
-Aplikacja webowa zbudowana w oparciu o framework Laravel 11, służąca do generowania, przechowywania oraz bezpiecznego usuwania unikalnych 10-cyfrowych kodów identyfikacyjnych.
+A professional web application built with **Laravel 11**, designed for generating, storing, and securely managing unique 10-digit identification codes.
 
-## Kluczowe Funkcjonalności
+## Key Features
 
-- **Autoryzacja i zabezpieczenia**: System logowania i rejestracji oparty na Laravel Breeze z wymuszeniem silnej polityki haseł (wymagane znaki specjalne, cyfry oraz małe i wielkie litery).
-- **Zarządzanie kodami**: Generowanie unikalnych 10-cyfrowych ciągów przy użyciu bezpiecznego generatora `random_int()`.
-- **Izolacja danych**: Pełne powiązanie rekordów z użytkownikiem (relacja One-to-Many). Każdy użytkownik ma dostęp wyłącznie do wygenerowanych przez siebie danych.
-- **Masowe operacje**: System usuwania wielu kodów jednocześnie z implementacją transakcji bazodanowych (Database Transactions), co zapewnia atomowość operacji zgodnie z zasadą "wszystko albo nic".
-- **Optymalizacja wydajności**: Wykorzystanie mechanizmu Eager Loading w celu wyeliminowania problemu zapytań N+1 podczas wyświetlania listy kodów wraz z danymi autorów.
+* **Authentication & Security**: Robust login and registration system powered by **Laravel Breeze** with enforced strong password policies (requires special characters, numbers, and mixed case).
+* **Secure Code Generation**: Generation of unique 10-digit sequences using the cryptographically secure `random_int()` function.
+* **Data Isolation**: Strict ownership model (**One-to-Many** relationship). Users can only access and manage their own generated data, ensuring privacy and security.
+* **Advanced Data Table**: Interactive list featuring **Dynamic Sorting** (ID, Code, Date) and optimized **Bootstrap 5 Pagination** (available at both top and bottom of the list).
+* **Bulk Operations**: Atomic "all-or-nothing" deletion system implemented with **Database Transactions** to ensure data integrity.
+* **Performance Optimization**: Efficient database interaction using **Eager Loading** to eliminate **N+1 query** problems.
 
-## Architektura i Standardy
+## Tech Stack & Standards
 
-- **Backend**: PHP 8.3 / Laravel 11 (MVC).
-- **Frontend**: Bootstrap 5 wzbogacony o niestandardowe style, czcionki z rodziny Inter oraz semantyczne tagi HTML5 z atrybutami poprawiającymi dostępność (aria-labels, autocomplete).
-- **Baza danych**: Relacyjna baza danych (MySQL/PostgreSQL) z nałożonymi ograniczeniami UNIQUE oraz kluczami obcymi z kaskadowym usuwaniem (onDelete cascade).
-- **Walidacja**: Wielopoziomowa weryfikacja danych – od strony frontendu (HTML5) po rygorystyczną walidację po stronie serwera przy użyciu wyrażeń regularnych (Regex).
+* **Backend**: **PHP 8.3** / **Laravel 11** (MVC Architecture).
+* **Frontend**: **Bootstrap 5** with custom styles, **Inter** typography, and semantic **HTML5** for accessibility (`aria-labels`, `autocomplete`).
+* **Database**: Relational DB (**MySQL/PostgreSQL**) with strict **UNIQUE** constraints and foreign keys with cascading deletes (`onDelete cascade`).
+* **Validation**: Multi-layer validation – from frontend (**HTML5**) to rigorous server-side validation using **Regular Expressions (Regex)**.
 
-## Instalacja i Uruchomienie
+## Installation & Setup
 
-1. Sklonuj repozytorium:
+1. **Clone the repository**:
 ```bash
-git clone https://github.com/kamilkamieniarz/laravel-codes-manager.git
+git clone [https://github.com/kamilkamieniarz/laravel-codes-manager.git](https://github.com/kamilkamieniarz/laravel-codes-manager.git)
 ```
 
-2. Zainstaluj zależności PHP:
+2. **Install PHP dependencies:**
 ```bash
 composer install
 ```
 
-3. Zainstaluj i zbuduj zasoby frontendowe:
+3. **Install and build frontend assets:**
 ```bash
 npm install && npm run build
 ```
 
-4. Skonfiguruj środowisko:
+4. **Environment Configuration:**
 ```bash
 cp .env.example .env
 php artisan key:generate
+(Note: Set your database credentials in the .env file)
 ```
-*(Należy uzupełnić dane dostępowe do bazy danych w pliku .env)*
 
-5. Uruchom migracje wraz z zasileniem bazy danymi testowymi:
+5. **Run Migrations & Seeding:**
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-## Dane do Testów
+Recruitment Testing Data
+A test account is available for immediate review:
 
-W celach rekrutacyjnych przygotowano konto testowe z wygenerowanymi danymi:
+Login: recruiter@example.com
 
-- **Login**: recruiter@example.com
-- **Hasło**: recruiter123
+Password: recruiter123
 
-Konto posiada przypisane 20 kodów, co pozwala na natychmiastowe przetestowanie mechanizmu paginacji oraz widoku listy.
+The test account comes pre-loaded with 20 codes to instantly demonstrate pagination, dynamic sorting, and data table responsiveness.
