@@ -30,7 +30,7 @@
             </tbody>
         </table>
 
-        <div class="d-flex justify-content-center mt-4">
+        <div class="pagination-wrapper mt-4">
             {{ $codes->links() }}
         </div>
     </div>
