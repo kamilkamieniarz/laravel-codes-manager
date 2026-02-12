@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codes Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .navbar { border-bottom: 1px solid #e2e8f0; background: #fff !important; }
+    .card { border: none; border-radius: 12px; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-2px); }
+    .btn-primary { background-color: #4f46e5; border-color: #4f46e5; border-radius: 8px; font-weight: 600; }
+</style>
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">

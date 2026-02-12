@@ -13,13 +13,14 @@
                         <div class="mb-3">
                             <label for="amount" class="form-label">Liczba kodów (1-10)</label>
                             <input type="number" 
-                                   class="form-control @error('amount') is-invalid @enderror" 
-                                   id="amount" 
-                                   name="amount" 
-                                   value="{{ old('amount', 1) }}" 
-                                   min="1" 
-                                   max="10" 
-                                   required>
+                                name="amount" 
+                                id="amount" 
+                                class="form-control" 
+                                min="1" max="10" 
+                                required 
+                                autofocus 
+                                autocomplete="off"
+                                placeholder="Enter amount (1-10)">
 
                             @error('amount')
                                 <span class="invalid-feedback" role="alert">
