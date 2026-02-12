@@ -10,15 +10,28 @@ use Illuminate\Support\Facades\Auth;
 class CodeController extends Controller
 {
     /**
-     * List codes with pagination and eager-loaded user relation.
-     * Ensuring data isolation: users only see their own codes.
+     * Display a listing of the generated codes with dynamic sorting.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $codes = Auth::user()->codes()
-            ->with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        // Validate sorting parameters
+        $sort = $request->get('sort', 'id');
+        $direction = $request->get('direction', 'desc');
+        $allowedSorts = ['id', 'code', 'created_at'];
+
+        // Security: Fallback to defaults if values are manipulated
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'id';
+        }
+        
+        $direction = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+
+        // Fetch data with eager loading and dynamic order
+        $codes = Code::with('user')
+            ->where('user_id', auth()->id())
+            ->orderBy($sort, $direction)
+            ->paginate(15)
+            ->withQueryString();
 
         return view('codes.index', compact('codes'));
     }
