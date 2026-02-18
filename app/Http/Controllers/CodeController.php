@@ -2,31 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteCodeRequest;
+use App\Http\Requests\StoreCodeRequest;
 use App\Models\Code;
+use App\Services\CodeService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class CodeController extends Controller
 {
     /**
-     * Display a listing of the generated codes with dynamic sorting.
+     * Service responsible for handling code generation business logic.
+     * Injected via setter to ensure flexibility and loose coupling.
      */
-    public function index(Request $request)
+    protected ?CodeService $codeService = null;
+
+    /**
+     * Injects the CodeService dependency.
+     *
+     * @param CodeService $codeService
+     */
+    public function setCodeService(CodeService $codeService): void
     {
-        // Validate sorting parameters
+        $this->codeService = $codeService;
+    }
+
+    /**
+     * Display a listing of the generated codes with dynamic sorting.
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request): View
+    {
         $sort = $request->get('sort', 'id');
         $direction = $request->get('direction', 'desc');
         $allowedSorts = ['id', 'code', 'created_at'];
 
-        // Security: Fallback to defaults if values are manipulated
-        if (!in_array($sort, $allowedSorts)) {
+        if (!in_array($sort, $allowedSorts, true)) {
             $sort = 'id';
         }
         
         $direction = strtolower($direction) === 'asc' ? 'asc' : 'desc';
 
-        // Fetch data with eager loading and dynamic order
         $codes = Code::with('user')
             ->where('user_id', auth()->id())
             ->orderBy($sort, $direction)
@@ -36,93 +56,93 @@ class CodeController extends Controller
         return view('codes.index', compact('codes'));
     }
 
-    public function create()
+    /**
+     * Show the form for creating new codes.
+     *
+     * @return View
+     */
+    public function create(): View
     {
         return view('codes.create');
     }
 
     /**
-     * Generate unique numeric codes based on user input (1-10).
-     * Uses random_int for cryptographically secure pseudo-random integers.
+     * Generate unique numeric codes based on user input.
+     * Delegates the generation logic to the injected CodeService.
+     *
+     * @param StoreCodeRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreCodeRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'amount' => 'required|integer|min:1|max:10',
-        ]);
-
+        $validated = $request->validated();
         $amount = (int) $validated['amount'];
-        $userId = Auth::id();
+        $userId = auth()->id();
+        
         $codesToInsert = [];
+        $generatedCodes = [];
 
         for ($i = 0; $i < $amount; $i++) {
+            $code = $this->codeService->generateUniqueCode($generatedCodes);
+            
+            $generatedCodes[] = $code;
+            
             $codesToInsert[] = [
                 'user_id' => $userId,
-                'code' => $this->generateUniqueCode(),
+                'code' => $code,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
 
-        // Bulk insert for better performance
+        // Bulk insert for maximum performance
         Code::insert($codesToInsert);
 
         return redirect()->route('codes.index')
             ->with('success', 'Kody zostały pomyślnie wygenerowane');
     }
 
-    public function deleteForm()
+    /**
+     * Show the form for deleting specific codes.
+     *
+     * @return View
+     */
+    public function deleteForm(): View
     {
         return view('codes.delete');
     }
 
     /**
-     * Delete a set of codes only if every provided code belongs to the user.
-     * Implements database transaction to ensure atomicity.
+     * Delete a set of codes ensuring data integrity.
+     * Implements database transactions for atomic operations.
+     *
+     * @param DeleteCodeRequest $request
+     * @return RedirectResponse
      */
-    public function destroy(Request $request)
+    public function destroy(DeleteCodeRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'codes' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
-        // Normalize input: handle spaces, commas, and new lines
         $inputCodes = preg_split('/[\s,]+/', $validated['codes'], -1, PREG_SPLIT_NO_EMPTY);
 
-        // Verify ownership and existence
-        $existingCodes = Auth::user()->codes()
+        $existingCodes = auth()->user()->codes()
             ->whereIn('code', $inputCodes)
             ->pluck('code')
             ->toArray();
 
         $missingCodes = array_diff($inputCodes, $existingCodes);
 
-        // All-or-nothing validation logic as per technical requirements
         if (!empty($missingCodes)) {
             return back()
                 ->withInput()
                 ->with('warning', 'Nie znaleziono następujących kodów w bazie danych: ' . implode(', ', $missingCodes));
         }
 
-        // Use transaction to ensure data integrity during deletion
-        DB::transaction(function () use ($inputCodes) {
-            Auth::user()->codes()->whereIn('code', $inputCodes)->delete();
+        DB::transaction(function () use ($inputCodes): void {
+            auth()->user()->codes()->whereIn('code', $inputCodes)->delete();
         });
 
         return redirect()->route('codes.index')
             ->with('success', 'Pomyślnie usunięto podane kody.');
-    }
-
-    /**
-     * Generates a unique 10-digit numeric string.
-     * Prevents collisions by checking database existence.
-     */
-    private function generateUniqueCode(): string
-    {
-        do {
-            $code = str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT);
-        } while (Code::where('code', $code)->exists());
-
-        return $code;
     }
 }
