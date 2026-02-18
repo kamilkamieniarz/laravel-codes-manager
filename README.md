@@ -13,7 +13,7 @@ A professional web application built with **Laravel 11**, designed for generatin
 
 ## Tech Stack & Standards
 
-* **Backend**: **PHP 8.2** / **Laravel 12** (MVC Architecture, Service Layer Pattern).
+* **Backend**: **PHP 8.4** / **Laravel 12** (MVC Architecture, Service Layer Pattern).
 * **Frontend**: **Bootstrap 5** with custom styles, **Inter** typography, and semantic **HTML5** for accessibility (`aria-labels`, `autocomplete`).
 * **Database**: Relational DB (**MySQL/PostgreSQL**) with strict **UNIQUE** constraints and foreign keys with cascading deletes (`onDelete cascade`).
 * **Validation**: Multi-layer validation – from frontend (**HTML5**) to rigorous server-side validation using **Regular Expressions (Regex)**.
@@ -45,6 +45,12 @@ php artisan key:generate
 5. **Run Migrations & Seeding:**
 ```bash
 php artisan migrate:fresh --seed
+```
+
+6. **Start the local development server:**
+```bash
+php artisan serve
+(Note: The application will be accessible at localhost:8000)
 ```
 
 Recruitment Testing Data
