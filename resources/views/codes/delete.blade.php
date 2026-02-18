@@ -12,23 +12,17 @@
                         <strong>Uwaga:</strong> Operacja zostanie wykonana tylko wtedy, gdy WSZYSTKIE podane kody istnieją w bazie.
                     </div>
 
-                    <form method="POST" action="{{ route('codes.destroy') }}">
+                    <form method="POST" action="{{ route('codes.destroy', 'bulk') }}">
                         @csrf
                         @method('DELETE')
 
                         <div class="mb-3">
                             <label for="codes" class="form-label">Kody do usunięcia</label>
-                            <textarea class="form-control @error('codes') is-invalid @enderror" 
+                            <textarea class="form-control"
                                       id="codes" 
                                       name="codes" 
                                       rows="5" 
                                       required>{{ old('codes') }}</textarea>
-                            
-                            @error('codes')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
 
                         <div class="d-flex justify-content-between">

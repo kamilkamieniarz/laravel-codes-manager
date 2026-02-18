@@ -79,19 +79,7 @@
     </nav>
 
     <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if(session('warning'))
-            <div class="alert alert-warning alert-dismissible fade show border-0 shadow-sm" role="alert">
-                {{ session('warning') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+        <x-system-messages />
 
         @yield('content')
     </div>

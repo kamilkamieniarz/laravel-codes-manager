@@ -21,12 +21,6 @@
                                 autofocus 
                                 autocomplete="off"
                                 placeholder="Enter amount (1-10)">
-
-                            @error('amount')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
 
                         <div class="d-flex justify-content-between">
