@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use App\Http\Controllers\CodeController;
+use App\Services\CodeService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(CodeController::class, function ($app) {
+            $controller = new CodeController();
+            $controller->setCodeService($app->make(CodeService::class));
+            
+            return $controller;
+        });
     }
 
     /**

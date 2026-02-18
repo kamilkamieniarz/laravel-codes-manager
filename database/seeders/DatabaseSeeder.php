@@ -4,12 +4,19 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Code;
+use App\Services\CodeService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * Run the database seeds.
+     * Injects CodeService to ensure business logic consistency and code uniqueness.
+     *
+     * @param CodeService $codeService
+     */
+    public function run(CodeService $codeService): void
     {
         $recruiter = User::create([
             'name' => 'Project Reviewer',
@@ -20,7 +27,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 20; $i++) {
             Code::create([
                 'user_id' => $recruiter->id,
-                'code' => str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT),
+                'code' => $codeService->generateUniqueCode(),
             ]);
         }
 
@@ -33,7 +40,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 5; $i++) {
             Code::create([
                 'user_id' => $otherUser->id,
-                'code' => str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT),
+                'code' => $codeService->generateUniqueCode(),
             ]);
         }
     }
