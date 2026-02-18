@@ -11,19 +11,19 @@
             <thead class="table-light">
                 <tr>
                     <th>
-                        <a href="{{ route('codes.index', ['sort' => 'id', 'direction' => (request('sort') == 'id' && request('direction') == 'desc') ? 'asc' : 'desc']) }}" class="text-decoration-none text-dark">
-                            ID @if(request('sort', 'id') == 'id') <i class="fas fa-sort-{{ request('direction', 'desc') == 'asc' ? 'up' : 'down' }}"></i> @endif
+                        <a href="{{ route('codes.index', ['sort' => 'id', 'direction' => (request('sort') === 'id' && request('direction') === 'desc') ? 'asc' : 'desc']) }}" class="text-decoration-none text-dark">
+                            ID @if(request('sort', 'id') === 'id') <i class="fas fa-sort-{{ request('direction', 'desc') === 'asc' ? 'up' : 'down' }}"></i> @endif
                         </a>
                     </th>
                     <th>
-                        <a href="{{ route('codes.index', ['sort' => 'code', 'direction' => (request('sort') == 'code' && request('direction') == 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
-                            Code @if(request('sort') == 'code') <i class="fas fa-sort-{{ request('direction') == 'asc' ? 'up' : 'down' }}"></i> @endif
+                        <a href="{{ route('codes.index', ['sort' => 'code', 'direction' => (request('sort') === 'code' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                            Code @if(request('sort') === 'code') <i class="fas fa-sort-{{ request('direction') === 'asc' ? 'up' : 'down' }}"></i> @endif
                         </a>
                     </th>
                     <th>Owner (Email)</th>
                     <th>
-                        <a href="{{ route('codes.index', ['sort' => 'created_at', 'direction' => (request('sort') == 'created_at' && request('direction') == 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
-                            Created At @if(request('sort') == 'created_at') <i class="fas fa-sort-{{ request('direction') == 'asc' ? 'up' : 'down' }}"></i> @endif
+                        <a href="{{ route('codes.index', ['sort' => 'created_at', 'direction' => (request('sort') === 'created_at' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
+                            Created At @if(request('sort') === 'created_at') <i class="fas fa-sort-{{ request('direction') === 'asc' ? 'up' : 'down' }}"></i> @endif
                         </a>
                     </th>
                 </tr>
@@ -33,7 +33,8 @@
                     <tr>
                         <td>{{ $code->id }}</td>
                         <td class="fw-bold">{{ $code->code }}</td>
-                        <td>{{ $code->user->email }}</td> <td>{{ $code->created_at->format('Y-m-d H:i') }}</td>
+                        <td>{{ $code->user->email }}</td> 
+                        <td>{{ $code->created_at->format('Y-m-d H:i') }}</td>
                     </tr>
                 @empty
                     <tr>

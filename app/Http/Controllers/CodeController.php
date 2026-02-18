@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteCodeRequest;
-use App\Http\Requests\StoreCodeRequest;
+use App\Http\Requests\CreateCodeRequest;
 use App\Models\Code;
 use App\Services\CodeService;
 use Illuminate\Http\RedirectResponse;
@@ -70,10 +70,10 @@ class CodeController extends Controller
      * Generate unique numeric codes based on user input.
      * Delegates the generation logic to the injected CodeService.
      *
-     * @param StoreCodeRequest $request
+     * @param CreateCodeRequest $request
      * @return RedirectResponse
      */
-    public function store(StoreCodeRequest $request): RedirectResponse
+    public function store(CreateCodeRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $amount = (int) $validated['amount'];

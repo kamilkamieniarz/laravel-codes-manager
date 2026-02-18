@@ -14,11 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(CodeController::class, function ($app) {
-            $controller = new CodeController();
+        // Professional way to handle Setter Injection via Container Hooks
+        $this->app->afterResolving(CodeController::class, function (CodeController $controller, $app) {
             $controller->setCodeService($app->make(CodeService::class));
-            
-            return $controller;
         });
     }
 
